@@ -1,0 +1,42 @@
+services:
+  bookmarkDB:
+    container_name: 'bookmarkDB'
+    image: 'mysql:8.0.32'
+    restart: 'always'
+    volumes:
+      - 'mysql_volume:/app/mysql'
+    environment:
+      - 'MYSQL_ROOT_PASSWORD=asdf1234'
+      - 'MYSQL_DATABASE=dev'
+      - 'MYSQL_USER=dev_admin'
+      - 'MYSQL_PASSWORD=asdf1234'
+    ports:
+      - "3306:3306"
+    networks:
+      - 'bookmark-net'
+    healthcheck:
+      test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
+      timeout: 20s
+      retries: 10
+  bookmarkServer:
+    container_name: 'bookmarkServer'
+    ports:
+      - "8080:8080"
+    image: 'hyeyeoncha/bookmark_backend_server:1.0'
+    volumes:
+      - 'bookmark_images:/app/bookmark/images'
+    networks:
+      - 'bookmark-net'
+    depends_on:
+      bookmarkDB:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: 'jdbc:mysql://bookmarkDB:3306/dev'
+networks:
+  bookmark-net:
+    driver: bridge
+volumes:
+  mysql_volume:
+    driver: local
+  bookmark_images:
+    driver: local
