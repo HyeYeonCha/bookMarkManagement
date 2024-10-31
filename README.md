@@ -10,6 +10,7 @@ $ docker pull hyeyeoncha/bookmark_db:1.0
 ```
 
 - mysql 접속 방법
+- 데이터 관련 오류가 났을 경우 scheme.sql 과 data.sql 을 루트 계정에서 돌려주시면 동작합니다. (버그를 완전히 처리하지 못했습니다.)
 ```shell
 $ docker exec -it bookmarkDB bash
 $ mysql -u root -p
@@ -21,8 +22,12 @@ $ mysql -u root -p
 $ docker compose up -d
 ```
 
+- swagger 접속방법
+- http://localhost:8080/swagger-ui/index.html
+- 각 header 로 토큰이 전송되어야 하는데 해당 부분의 구현이 미흡하여 curl 테스트시 더 정확하게 테스트 하실 수 있습니다.
 
-각 API 예시 Curl
+
+## 각 API 예시 Curl
 ```shell
 
 <test jwt>
@@ -187,3 +192,13 @@ erDiagram
         dateTime updatedDatetime
     }
 ```
+
+---
+# 설명
+- 회원 가입이후 jwt 토큰을 이용해 인증 처리를 했습니다.
+- 각 API 에서 request Interceptor 를 사용해 토큰을 받아 사용할 수 있도록 처리했습니다.
+- 비즈니스 로직은 kotest 를 이용해 테스트 코드를 작성했습니다.
+  - 각 요구사항의 명세를 확인 할 수 있습니다.
+- 패쓰워드 암호화의 경우 선택적 스펙이라 생각하여 진행하지 않았습니다.
+- 찜 서랍 목록에서 썸네일은 구현되어 있지 않습니다. (찜 서랍내부 찜 목록에서는 확인이 가능합니다.)
+- 위에 미흡하다고 적은 부분은 개선하고 싶은 부분으로 시간이 부족하여 해당 부분까지 완료 후 제출합니다. 
