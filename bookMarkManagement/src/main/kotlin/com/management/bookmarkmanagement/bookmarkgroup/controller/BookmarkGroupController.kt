@@ -1,8 +1,7 @@
 package com.management.bookmarkmanagement.bookmarkgroup.controller
 
 import com.management.bookmarkmanagement.bookmarkgroup.application.BookmarkGroupService
-import com.management.bookmarkmanagement.bookmarkgroup.dto.NewBookmarkGroupRequest
-import com.management.bookmarkmanagement.bookmarkgroup.dto.NewBookmarkGroupResponse
+import com.management.bookmarkmanagement.bookmarkgroup.dto.*
 import com.management.bookmarkmanagement.config.TokenHolder
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.HttpStatus
@@ -34,4 +33,16 @@ class BookmarkGroupController(
     }
 
 
+    @GetMapping("/groups")
+    @ResponseStatus(HttpStatus.OK)
+    fun getBookmarkGroups(paginationRequest: PaginationRequest): BookmarkGroupsResponse {
+        val email = TokenHolder.getUserEmail()
+        val pagedBookmarkGroups = bookmarkGroupService.getMyBookmarkGroups(email = email, paginationRequest = paginationRequest)
+
+        return BookmarkGroupsResponse(
+            totalPage = pagedBookmarkGroups.totalPage,
+            totalItems = pagedBookmarkGroups.totalItems,
+            bookmarkGroups = pagedBookmarkGroups.items.map { BookmarkGroupsResponse.BookmarkGroupResponse.from(it) }
+        )
+    }
 }
