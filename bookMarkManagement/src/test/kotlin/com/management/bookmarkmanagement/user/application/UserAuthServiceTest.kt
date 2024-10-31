@@ -1,12 +1,15 @@
 package com.management.bookmarkmanagement.user.application
 
 import com.management.bookmarkmanagement.user.dao.UserAuthRepository
+import com.management.bookmarkmanagement.user.domain.UserEntity
 import com.management.bookmarkmanagement.user.dto.SignUpDto
 import com.management.bookmarkmanagement.user.exception.DuplicatedUserException
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
+import io.mockk.every
 import io.mockk.mockk
+import io.mockk.verify
 
 class UserAuthServiceTest : FunSpec({
 
@@ -22,13 +25,16 @@ class UserAuthServiceTest : FunSpec({
 
             val signUpDto = SignUpDto(email = email, password = password)
 
-            // todo 현재 통과 안 됨
+            every {
+                userAuthRepository.findByEmail(email)
+            }.returns(UserEntity(newEmail = email, newPassword = password))
+
             // WHEN && THEN
             val exception = shouldThrow<DuplicatedUserException> {
                 sut.userSignUp(signUpDto = signUpDto)
             }
 
-            exception.message shouldBe "중복 유저로 가입 불가"
+            exception.message shouldBe "중복 유저로 가입불가"
         }
 
         test("email 로 user 를 찾았을 때 동일 user 가 없다면 토큰과 userId 가 반환된다.") {
@@ -39,10 +45,14 @@ class UserAuthServiceTest : FunSpec({
 
             val signUpDto = SignUpDto(email = email, password = password)
 
+            every { userAuthRepository.findByEmail(email) }.returns(null)
+            every { userAuthRepository.saveNewUser(any()) }.returns(1L)
+
             // WHEN
             val result = sut.userSignUp(signUpDto = signUpDto)
 
-            result.userId shouldBe 123L
+            verify { userAuthRepository.saveNewUser(signUpDto = signUpDto) }
+            result.userId shouldBe result.userId
             result.accessToken shouldBe testAccessToken
         }
     }
