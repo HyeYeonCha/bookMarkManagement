@@ -1,5 +1,6 @@
 package com.management.bookmarkmanagement.user.domain
 
+import com.management.bookmarkmanagement.user.dto.UserDto
 import java.time.LocalDateTime
 import javax.persistence.*
 
@@ -13,11 +14,17 @@ class UserEntity(
     @Transient
     private val newEmail: String,
     @Transient
+    private val newName: String,
+    @Transient
     private val newPassword: String,
 ) {
 
     @Column(nullable = false)
     var email: String = newEmail
+            private set
+
+    @Column(name = "user_name", nullable = false)
+    var name: String = newName
             private set
 
     @Column(nullable = false)
@@ -35,4 +42,11 @@ class UserEntity(
     fun validatePassword(password: String): Boolean {
         return password == this.password
     }
+
+    fun toDto() = UserDto(
+        id = this.id,
+        userName = this.name,
+        email = this.email,
+        createdDateTime = this.createdDateTime,
+    )
 }

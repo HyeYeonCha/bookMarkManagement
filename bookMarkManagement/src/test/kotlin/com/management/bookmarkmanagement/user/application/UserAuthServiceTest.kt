@@ -28,13 +28,14 @@ class UserAuthServiceTest : FunSpec({
         test("email 로 user 를 찾았을 때 동일 user 가 있다면 DuplicatedUserException 이 발생한다.") {
             // GIVEN
             val email = "duplicatedUserEmail"
+            val name = "userName"
             val password = "1234"
 
-            val signUpDto = SignUpDto(email = email, password = password)
+            val signUpDto = SignUpDto(email = email, name = name, password = password)
 
             every {
                 userAuthRepository.findByEmail(email)
-            }.returns(UserEntity(newEmail = email, newPassword = password))
+            }.returns(UserEntity(newEmail = email, newName = name, newPassword = password))
 
             // WHEN && THEN
             val exception = shouldThrow<DuplicatedUserException> {
@@ -47,10 +48,11 @@ class UserAuthServiceTest : FunSpec({
         test("email 로 user 를 찾았을 때 동일 user 가 없다면 토큰과 userId 가 반환된다.") {
             // GIVEN
             val email = "userEmail"
+            val name = "userName"
             val password = "1234"
             val testAccessToken = "123"
 
-            val signUpDto = SignUpDto(email = email, password = password)
+            val signUpDto = SignUpDto(email = email, name = name, password = password)
 
             every { userAuthRepository.findByEmail(email) }.returns(null)
             every { jwtUtil.generateToken(email) }.returns(testAccessToken)
@@ -92,7 +94,7 @@ class UserAuthServiceTest : FunSpec({
 
             every {
                 userAuthRepository.findByEmail(email)
-            }.returns(UserEntity(newEmail = email, newPassword = "123456"))
+            }.returns(UserEntity(newEmail = email, newName = "testName", newPassword = "123456"))
 
             // WHEN && THEN
             val exception = shouldThrow<NoMatchPasswordException> {
@@ -111,7 +113,7 @@ class UserAuthServiceTest : FunSpec({
             val signInDto = SignInDto(email = email, password = password)
 
             every { userAuthRepository.findByEmail(email) }
-                .returns(UserEntity(newEmail = email, newPassword = password))
+                .returns(UserEntity(newEmail = email, newName = "testName", newPassword = password))
             every { jwtUtil.generateToken(email) }.returns(testAccessToken)
 
             // WHEN
