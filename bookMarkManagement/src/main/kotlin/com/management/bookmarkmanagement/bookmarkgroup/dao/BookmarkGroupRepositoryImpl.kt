@@ -19,4 +19,10 @@ class BookmarkGroupRepositoryImpl(
 
         return bookmarkGroupEntity.id
     }
+
+    override fun deleteBookmarkGroup(userId: Long, bookmarkGroupId: Long) {
+        bookmarkGroupJPARepository.findById(bookmarkGroupId)
+            .filter { it.userId == userId }
+            .ifPresent { bookmarkGroupJPARepository.delete(it) }
+    }
 }

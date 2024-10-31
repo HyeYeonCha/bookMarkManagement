@@ -19,4 +19,9 @@ class BookmarkGroupService(
 
         return bookmarkGroupRepository.createBookmarkGroup(userId = userId, groupName = groupName)
     }
+
+    fun deleteBookmarkGroup(email: String, bookmarkGroupId: Long) {
+        val userId = userService.getUserByEmail(email = email).id
+        bookmarkGroupRepository.deleteBookmarkGroup(userId = userId, bookmarkGroupId = bookmarkGroupId)
+    }
 }
