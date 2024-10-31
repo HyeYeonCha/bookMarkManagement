@@ -1,8 +1,10 @@
 package com.management.bookmarkmanagement.bookmark.application
 
 import com.management.bookmarkmanagement.bookmark.dao.BookmarkRepository
+import com.management.bookmarkmanagement.bookmark.dao.ProductJPARepository
 import com.management.bookmarkmanagement.bookmark.dto.NewBookmarkDto
 import com.management.bookmarkmanagement.bookmark.exception.DuplicatedBookmarkException
+import com.management.bookmarkmanagement.bookmarkgroup.domain.ProductEntity
 import com.management.bookmarkmanagement.user.application.UserService
 import com.management.bookmarkmanagement.user.dao.UserAuthRepository
 import com.management.bookmarkmanagement.user.domain.UserEntity
@@ -12,16 +14,19 @@ import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
+import org.springframework.data.repository.findByIdOrNull
 
 class BookmarkServiceTest : FunSpec({
 
-    val bookmarkRepository: BookmarkRepository = mockk()
     val userAuthRepository: UserAuthRepository = mockk()
     val userAuthService = UserService(userAuthRepository = userAuthRepository)
+    val bookmarkRepository: BookmarkRepository = mockk()
+    val productJPARepository: ProductJPARepository = mockk()
 
     val sut = BookmarkService(
         userService = userAuthService,
         bookmarkRepository = bookmarkRepository,
+        productJPARepository = productJPARepository,
     )
 
     context("createBookmark") {
@@ -53,7 +58,7 @@ class BookmarkServiceTest : FunSpec({
             val userEntity = UserEntity(newEmail = newBookmarkDto.email, newName = "", newPassword = "")
 
             every { userAuthRepository.findByEmail(newBookmarkDto.email) }.returns(userEntity)
-            // bookmark 검색
+            every { bookmarkRepository.existsBookmark(userId = userEntity.id, productId = newBookmarkDto.productId) }.returns(true)
 
             // WHEN && THEN
             val exception = shouldThrow<DuplicatedBookmarkException> {
@@ -70,20 +75,35 @@ class BookmarkServiceTest : FunSpec({
                 productId = 1L,
                 bookmarkGroupId = 1L
             )
+            val bookmarkId = 1L
+
             val userEntity = UserEntity(newEmail = newBookmarkDto.email, newName = "", newPassword = "")
 
             every { userAuthRepository.findByEmail(newBookmarkDto.email) }.returns(userEntity)
-            // bookmark 검색
-            // bookmark 저장
+            every {
+                bookmarkRepository.existsBookmark(
+                    userId = userEntity.id,
+                    productId = newBookmarkDto.productId
+                )
+            }.returns(false)
 
+            val productEntity = ProductEntity(id = 1L, name = "test", price = 123, thumbnail = "")
+            every { productJPARepository.findByIdOrNull(newBookmarkDto.productId) }.returns(productEntity)
+
+            every {
+                bookmarkRepository.createBookmark(
+                    userId = userEntity.id,
+                    bookmarkGroupId = newBookmarkDto.bookmarkGroupId,
+                    productEntity = productEntity
+                )
+            }.returns(bookmarkId)
 
             // WHEN
             val result = sut.createBookmark(newBookmarkDto = newBookmarkDto)
 
             // THEN
-            result shouldBe 1L
+            result shouldBe bookmarkId
         }
-
 
     }
 

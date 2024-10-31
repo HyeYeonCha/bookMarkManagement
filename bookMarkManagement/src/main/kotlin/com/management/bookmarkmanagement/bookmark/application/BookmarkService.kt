@@ -1,24 +1,32 @@
 package com.management.bookmarkmanagement.bookmark.application
 
 import com.management.bookmarkmanagement.bookmark.dao.BookmarkRepository
+import com.management.bookmarkmanagement.bookmark.dao.ProductJPARepository
 import com.management.bookmarkmanagement.bookmark.dto.NewBookmarkDto
+import com.management.bookmarkmanagement.bookmark.exception.DuplicatedBookmarkException
 import com.management.bookmarkmanagement.user.application.UserService
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 
 @Service
 class BookmarkService(
     val userService: UserService,
     val bookmarkRepository: BookmarkRepository,
+    val productJPARepository: ProductJPARepository,
 ) {
     fun createBookmark(newBookmarkDto: NewBookmarkDto): Long {
-        // userId 가져오기
+        val userId = userService.getUserByEmail(email = newBookmarkDto.email).id
 
-        // userId 와 productId 로 bookmark table 에 있는지 조회
+        bookmarkRepository.existsBookmark(userId = userId, productId = newBookmarkDto.productId).run {
+            if (this) throw DuplicatedBookmarkException()
+        }
 
-        // 있으면 exception
+        val productEntity = productJPARepository.findByIdOrNull(newBookmarkDto.productId) ?: throw IllegalArgumentException()
 
-        // 없으면 create
-
-        return 1L
+        return bookmarkRepository.createBookmark(
+            userId = userId,
+            bookmarkGroupId = newBookmarkDto.bookmarkGroupId,
+            productEntity = productEntity,
+        )
     }
 }

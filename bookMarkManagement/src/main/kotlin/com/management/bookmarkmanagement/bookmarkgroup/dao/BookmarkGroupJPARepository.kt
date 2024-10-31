@@ -7,4 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository
 
 interface BookmarkGroupJPARepository: JpaRepository<BookmarkGroupEntity, Long> {
     fun findAllByUserId(userId: Long, pageable: Pageable): Page<BookmarkGroupEntity>
+    fun existsByUserIdAndGroupName(userId: Long, groupName: String): Boolean
 }

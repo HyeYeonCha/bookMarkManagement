@@ -12,8 +12,7 @@ class BookmarkGroupRepositoryImpl(
     private val bookmarkGroupJPARepository: BookmarkGroupJPARepository,
 ): BookmarkGroupRepository {
     override fun existsBookmarkGroup(userId: Long, groupName: String): Boolean {
-        val bookmarkGroupExample = Example.of(BookmarkGroupEntity(createdUserId = userId, newName = groupName))
-        return bookmarkGroupJPARepository.exists(bookmarkGroupExample)
+        return bookmarkGroupJPARepository.existsByUserIdAndGroupName(userId = userId, groupName = groupName)
     }
 
     override fun createBookmarkGroup(userId: Long, groupName: String): Long {
