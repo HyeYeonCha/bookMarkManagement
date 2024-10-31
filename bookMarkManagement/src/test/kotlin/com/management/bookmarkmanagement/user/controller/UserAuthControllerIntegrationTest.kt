@@ -40,4 +40,24 @@ class UserAuthControllerIntegrationTest {
 
         responseStatus shouldBe 200
     }
+
+
+    @Test
+    fun testSignIn() {
+        val signUpRequest = SignUpRequest(
+            email = "test@test.com", password = "test1234"
+        )
+
+        val result = mockMvc.perform(
+            post("/user/auth/v1/sign-in")
+                .contentType(APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(signUpRequest))
+        )
+            .andExpect(status().isOk)
+            .andReturn()
+
+        val responseStatus = result.response.status
+
+        responseStatus shouldBe 200
+    }
 }
