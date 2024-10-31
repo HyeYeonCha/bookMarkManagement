@@ -22,7 +22,10 @@ services:
     container_name: 'bookmarkServer'
     ports:
       - "8080:8080"
-    image: 'hyeyeoncha/bookmark_backend_server:1.0'
+    # 서버 릴리즈 버전
+    image: 'hyeyeoncha/bookmark_backend_server:1.1'
+    # 로컬 테스트용
+#    image: 'bookmark_backend_server'
     volumes:
       - 'bookmark_images:/app/bookmark/images'
     networks:

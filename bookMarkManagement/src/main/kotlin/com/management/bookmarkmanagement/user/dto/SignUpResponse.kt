@@ -1,4 +1,4 @@
-package com.management.bookmarkmanagement.user.response
+package com.management.bookmarkmanagement.user.dto
 
 data class SignUpResponse(
     val userId: Long,
