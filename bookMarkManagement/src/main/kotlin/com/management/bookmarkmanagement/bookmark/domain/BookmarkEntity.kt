@@ -1,5 +1,6 @@
 package com.management.bookmarkmanagement.bookmark.domain
 
+import com.management.bookmarkmanagement.bookmark.dto.Bookmark
 import com.management.bookmarkmanagement.bookmarkgroup.domain.ProductEntity
 import java.time.LocalDateTime
 import javax.persistence.*
@@ -36,4 +37,12 @@ class BookmarkEntity(
     @Column(name = "updated_datetime")
     var updatedDateTime: LocalDateTime = LocalDateTime.now()
         private set
+
+    fun toDto() = Bookmark(
+        id = id,
+        userId = userId,
+        productName = product.name,
+        productThumbnail = product.thumbnail,
+        createdDatetime = createdDateTime,
+    )
 }
