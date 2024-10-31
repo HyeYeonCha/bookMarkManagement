@@ -1,5 +1,6 @@
 package com.management.bookmarkmanagement.user.application
 
+import com.management.bookmarkmanagement.jwt.JwtUtil
 import com.management.bookmarkmanagement.user.dao.UserAuthRepository
 import com.management.bookmarkmanagement.user.domain.UserEntity
 import com.management.bookmarkmanagement.user.dto.SignUpDto
@@ -14,8 +15,11 @@ import io.mockk.verify
 class UserAuthServiceTest : FunSpec({
 
     val userAuthRepository: UserAuthRepository = mockk()
-    val sut = UserAuthService(userAuthRepository = userAuthRepository)
-
+    val jwtUtil: JwtUtil = mockk()
+    val sut = UserAuthService(
+        userAuthRepository = userAuthRepository,
+        jwtUtil = jwtUtil,
+    )
 
     context("signUp") {
         test("email 로 user 를 찾았을 때 동일 user 가 있다면 DuplicatedUserException 이 발생한다.") {
@@ -46,6 +50,7 @@ class UserAuthServiceTest : FunSpec({
             val signUpDto = SignUpDto(email = email, password = password)
 
             every { userAuthRepository.findByEmail(email) }.returns(null)
+            every { jwtUtil.generateToken(email) }.returns(testAccessToken)
             every { userAuthRepository.saveNewUser(any()) }.returns(1L)
 
             // WHEN
