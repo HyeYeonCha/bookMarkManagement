@@ -4,7 +4,6 @@ import com.management.bookmarkmanagement.user.domain.UserEntity
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import java.security.Key
 import java.util.*
@@ -12,7 +11,7 @@ import javax.crypto.spec.SecretKeySpec
 
 @Component
 class JwtUtil {
-
+    // 환경변수 필요
     private val SECRET_KEY: String = Base64.getEncoder().encodeToString(ByteArray(32))
 
     private fun getSigningKey(): Key {
