@@ -9,6 +9,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType.APPLICATION_JSON
 import org.springframework.test.web.servlet.MockMvc
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import kotlin.test.Test
@@ -44,5 +45,24 @@ class BookmarkGroupControllerIntegrationTest {
         val responseStatus = result.response.status
 
         responseStatus shouldBe 200
+    }
+    @Test
+    fun testDeleteBookmarkGroup() {
+        val bookmarkGroupId = 1L
+
+        val testEmail = "test@test.com"
+        val testToken = JwtUtil().generateToken(testEmail)
+
+        val result = mockMvc.perform(
+            delete("/product/bookmark/v1/groups/${bookmarkGroupId}")
+                .contentType(APPLICATION_JSON)
+                .header("Authorization", "Bearer $testToken")
+        )
+            .andExpect(status().isNoContent)
+            .andReturn()
+
+        val responseStatus = result.response.status
+
+        responseStatus shouldBe 204
     }
 }

@@ -6,6 +6,7 @@ import com.management.bookmarkmanagement.bookmarkgroup.dto.NewBookmarkGroupRespo
 import com.management.bookmarkmanagement.config.TokenHolder
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @Tag(name = "BookmarkGroup API")
@@ -22,4 +23,15 @@ class BookmarkGroupController(
         val groupId = bookmarkGroupService.createBookmarkGroup(email = email, groupName = request.groupName)
         return NewBookmarkGroupResponse(id = groupId)
     }
+
+    @DeleteMapping("/groups/{bookmarkGroupId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    fun deleteBookmarkGroup(@PathVariable bookmarkGroupId: Long): ResponseEntity<Void> {
+        val email = TokenHolder.getUserEmail()
+        bookmarkGroupService.deleteBookmarkGroup(email = email, bookmarkGroupId = bookmarkGroupId)
+
+        return ResponseEntity(HttpStatus.NO_CONTENT)
+    }
+
+
 }
