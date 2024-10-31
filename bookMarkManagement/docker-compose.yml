@@ -1,7 +1,7 @@
 services:
   bookmarkDB:
     container_name: 'bookmarkDB'
-    image: 'mysql:8.0.32'
+    image: 'hyeyeoncha/bookmark_db:1.0'
     restart: 'always'
     volumes:
       - 'mysql_volume:/app/mysql'
@@ -22,7 +22,10 @@ services:
     container_name: 'bookmarkServer'
     ports:
       - "8080:8080"
-    image: 'hyeyeoncha/bookmark_backend_server:1.0'
+    # 서버 릴리즈 버전
+    image: 'hyeyeoncha/bookmark_backend_server:3.0'
+    # 로컬 테스트용
+#    image: 'bookmark_backend_server'
     volumes:
       - 'bookmark_images:/app/bookmark/images'
     networks:
