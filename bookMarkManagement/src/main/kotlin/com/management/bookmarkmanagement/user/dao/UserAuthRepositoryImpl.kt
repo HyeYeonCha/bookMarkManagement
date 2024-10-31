@@ -15,6 +15,7 @@ class UserAuthRepositoryImpl(
     override fun saveNewUser(signUpDto: SignUpDto): Long {
         val userEntity = UserEntity(
             newEmail = signUpDto.email,
+            newName = signUpDto.name,
             newPassword = signUpDto.password,
         )
 

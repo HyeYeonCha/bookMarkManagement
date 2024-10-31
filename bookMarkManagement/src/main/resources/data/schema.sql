@@ -5,6 +5,7 @@
 CREATE TABLE IF NOT EXISTS users (
                                      id BIGINT PRIMARY KEY,
     email VARCHAR(256) NOT NULL,
+    user_name VARCHAR(256) NOT NULL,
     password VARCHAR(256) NOT NULL,
     created_datetime DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_datetime DATETIME DEFAULT CURRENT_TIMESTAMP

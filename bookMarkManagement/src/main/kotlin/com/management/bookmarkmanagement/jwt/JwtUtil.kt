@@ -13,8 +13,7 @@ import javax.crypto.spec.SecretKeySpec
 @Component
 class JwtUtil {
 
-    @Value("\${jwt.secret}")
-    private lateinit var SECRET_KEY: String
+    private val SECRET_KEY: String = Base64.getEncoder().encodeToString(ByteArray(32))
 
     private fun getSigningKey(): Key {
         val keyBytes = SECRET_KEY.toByteArray()

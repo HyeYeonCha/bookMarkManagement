@@ -13,11 +13,17 @@ class UserEntity(
     @Transient
     private val newEmail: String,
     @Transient
+    private val newName: String,
+    @Transient
     private val newPassword: String,
 ) {
 
     @Column(nullable = false)
     var email: String = newEmail
+            private set
+
+    @Column(name = "user_name", nullable = false)
+    var name: String = newName
             private set
 
     @Column(nullable = false)

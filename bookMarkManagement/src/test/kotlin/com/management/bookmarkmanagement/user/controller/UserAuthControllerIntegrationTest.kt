@@ -25,7 +25,7 @@ class UserAuthControllerIntegrationTest {
     @Test
     fun testSignUp() {
         val signUpRequest = SignUpRequest(
-            email = "test11@test.com", password = "asdf1234"
+            email = "test11@test.com", name = "testName", password = "asdf1234"
         )
 
         val result = mockMvc.perform(
@@ -45,7 +45,7 @@ class UserAuthControllerIntegrationTest {
     @Test
     fun testSignIn() {
         val signUpRequest = SignUpRequest(
-            email = "test@test.com", password = "test1234"
+            email = "test@test.com", name = "testName", password = "test1234"
         )
 
         val result = mockMvc.perform(
