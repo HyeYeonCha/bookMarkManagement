@@ -19,3 +19,24 @@ CREATE TABLE IF NOT EXISTS bookmark_groups (
     created_datetime DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_datetime DATETIME DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=innodb;
+
+
+CREATE TABLE IF NOT EXISTS bookmarks (
+                                 id BIGINT PRIMARY KEY,
+    user_id BIGINT NOT NULL,
+    bookmark_group_id BIGINT NOT NULL,
+    product_id BIGINT NOT NULL,
+    created_datetime DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_datetime DATETIME DEFAULT CURRENT_TIMESTAMP
+) ENGINE=innodb;
+
+
+CREATE TABLE IF NOT EXISTS products
+(
+    id        BIGINT PRIMARY KEY,
+    name      VARCHAR(255) null,
+    thumbnail VARCHAR(255) null,
+    price     BIGINT null,
+    created_datetime datetime null default CURRENT_TIMESTAMP,
+    updated_datetime datetime null default CURRENT_TIMESTAMP
+) ENGINE=innodb;
