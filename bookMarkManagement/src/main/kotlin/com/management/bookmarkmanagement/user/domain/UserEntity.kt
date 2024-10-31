@@ -1,5 +1,6 @@
 package com.management.bookmarkmanagement.user.domain
 
+import com.management.bookmarkmanagement.user.dto.UserDto
 import java.time.LocalDateTime
 import javax.persistence.*
 
@@ -41,4 +42,11 @@ class UserEntity(
     fun validatePassword(password: String): Boolean {
         return password == this.password
     }
+
+    fun toDto() = UserDto(
+        id = this.id,
+        userName = this.name,
+        email = this.email,
+        createdDateTime = this.createdDateTime,
+    )
 }
