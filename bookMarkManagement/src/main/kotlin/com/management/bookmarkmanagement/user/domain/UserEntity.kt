@@ -31,4 +31,8 @@ class UserEntity(
     @Column(name = "updated_datetime")
     var updatedDateTime: LocalDateTime = LocalDateTime.now()
         private set
+
+    fun validatePassword(password: String): Boolean {
+        return password == this.password
+    }
 }
