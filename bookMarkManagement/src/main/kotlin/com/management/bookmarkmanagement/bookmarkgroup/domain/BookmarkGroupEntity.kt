@@ -11,12 +11,12 @@ class BookmarkGroupEntity(
     val id: Long = 1L,
 
     @Transient
-    private val createdBy: Long,
+    private val createdUserId: Long,
     @Transient
     private val newName: String,
 ) {
     @Column(name = "user_id", nullable = false)
-    var userId: Long = createdBy
+    var userId: Long = createdUserId
         private set
 
     @Column(name = "group_name", nullable = false)

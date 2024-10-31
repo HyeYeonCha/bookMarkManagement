@@ -43,9 +43,10 @@ class BookmarkGroupServiceTest : FunSpec({
             // GIVEN
             val email = "userEmail"
             val groupName = "groupName"
+            val userEntity = UserEntity(newEmail = email, newName = "", newPassword = "")
 
-            every { userAuthRepository.findByEmail(email) }.returns(UserEntity(newEmail = email, newName = "", newPassword = ""))
-            // repository 검색
+            every { userAuthRepository.findByEmail(email) }.returns(userEntity)
+            every { bookmarkGroupRepository.existsBookmarkGroup(userId = userEntity.id, groupName = groupName) }.returns(true)
 
             // WHEN && THEN
             val exception = shouldThrow<DuplicatedBookmarkGroupException> {
@@ -59,12 +60,12 @@ class BookmarkGroupServiceTest : FunSpec({
             // GIVEN
             val email = "userEmail"
             val groupName = "groupName"
+            val userEntity = UserEntity(newEmail = email, newName = "", newPassword = "")
             val bookmarkGroupId = 1L
 
             every { userAuthRepository.findByEmail(email) }.returns(UserEntity(newEmail = email, newName = "", newPassword = ""))
-            // repository 검색
-            // repository 저장
-
+            every { bookmarkGroupRepository.existsBookmarkGroup(userId = userEntity.id, groupName = groupName) }.returns(false)
+            every { bookmarkGroupRepository.createBookmarkGroup(userId = userEntity.id, groupName = groupName) }.returns(bookmarkGroupId)
 
             // WHEN
             val result = sut.createBookmarkGroup(email = email, groupName = groupName)

@@ -1,6 +1,7 @@
 package com.management.bookmarkmanagement.bookmarkgroup.application
 
 import com.management.bookmarkmanagement.bookmarkgroup.dao.BookmarkGroupRepository
+import com.management.bookmarkmanagement.bookmarkgroup.exception.DuplicatedBookmarkGroupException
 import com.management.bookmarkmanagement.user.application.UserService
 import org.springframework.stereotype.Service
 
@@ -10,15 +11,12 @@ class BookmarkGroupService(
     private val userService: UserService,
 ) {
     fun createBookmarkGroup(email: String, groupName: String): Long {
+        val userId = userService.getUserByEmail(email = email).id
 
-        // user email 로 userId 검색
+        bookmarkGroupRepository.existsBookmarkGroup(userId = userId, groupName = groupName).run {
+            if (this) throw DuplicatedBookmarkGroupException()
+        }
 
-        // userId 와 groupName 으로 기존 bookmarkGroup 검색
-
-        // 있으면 exception
-
-        // 없으면 저장
-
-        return 1L
+        return bookmarkGroupRepository.createBookmarkGroup(userId = userId, groupName = groupName)
     }
 }

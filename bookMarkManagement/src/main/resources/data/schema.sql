@@ -10,3 +10,12 @@ CREATE TABLE IF NOT EXISTS users (
     created_datetime DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_datetime DATETIME DEFAULT CURRENT_TIMESTAMP
     ) ENGINE=innodb;
+
+
+CREATE TABLE IF NOT EXISTS bookmark_groups (
+                                 id BIGINT PRIMARY KEY,
+    user_id BIGINT NOT NULL,
+    group_name VARCHAR(255) NOT NULL,
+    created_datetime DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_datetime DATETIME DEFAULT CURRENT_TIMESTAMP
+) ENGINE=innodb;
